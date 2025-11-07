@@ -53,7 +53,7 @@ This application is built with a Python Flask backend, a MySQL database, and an 
     ```bash
     pip install -r requirements.txt
     ```
-    *(Note: You'll need to create a `requirements.txt` file first. See Step 5 below.)*
+    
 
 3.  **Set up the database:**
     * Open your MySQL client (like MySQL Workbench).
