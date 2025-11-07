@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-3">My Registered Courses (Demo: Stored Procedure)</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Registration Date</th>
+                                <th>Grade</th>
+                                <th>Action (DELETE)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in my_courses %}
+                            <tr>
+                                <td>{{ course.Course_ID }}</td>
+                                <td><strong>{{ course.Course_Name }}</strong></td>
+                                <td>{{ course.Reg_Date }}</td>
+                                <td>{{ course.Grade or 'N/A' }}</td>
+                                <td>
+                                    <a href="/drop/{{ course.Reg_ID }}" class="btn btn-danger btn-sm">Drop</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">You are not registered for any courses.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-5">
+            <h2 class="mb-3">Available Courses (Demo: JOIN Query)</h2>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>Trigger Demo:</strong> The course 'CS100' (Test Course) has a capacity of 2 and is full. Try registering for it to see the trigger's error message.
+                    </div>
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Course Name</th>
+                                <th>Faculty</th>
+                                <th>Department</th>
+                                <th>Action (CREATE + Trigger)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in available_courses %}
+                            <tr>
+                                <td>{{ course.Course_ID }}</td>
+                                <td><strong>{{ course.Course_Name }}</strong></td>
+                                <td>{{ course.Faculty_Name }}</td>
+                                <td>{{ course.Dept_Name }}</td>
+                                <td>
+                                    <a href="/register/{{ course.Course_ID }}" class="btn btn-success btn-sm">Register</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
