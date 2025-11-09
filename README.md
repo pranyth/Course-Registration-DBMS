@@ -46,7 +46,7 @@ This application is built with a Python Flask backend, a MySQL database, and an 
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/pranyth/Course-Registration-DBMS.git](https://github.com/YourUsername/Course-Registration-DBMS.git)
+    git clone https://github.com/pranyth/Course-Registration-DBMS.git
     cd Course-Registration-DBMS
     ```
 2.  **Install dependencies:**
