@@ -6,7 +6,9 @@ DROP DATABASE IF EXISTS miniproject;
 CREATE DATABASE miniproject;
 USE miniproject;
 
--- DDL
+--
+-- DDL (Data Definition Language) - Creating Tables
+--
 
 CREATE TABLE Department (
     Department_ID VARCHAR(10) PRIMARY KEY,
@@ -80,7 +82,9 @@ CREATE TABLE Schedule (
     FOREIGN KEY (Classroom_ID) REFERENCES Classroom(Classroom_ID) ON DELETE SET NULL
 );
 
--- DML
+--
+-- DML (Data Manipulation Language) - Inserting Data
+--
 
 -- Insert data into Department table
 INSERT INTO Department (Department_ID, Dept_Name, Location) VALUES
@@ -108,7 +112,6 @@ INSERT INTO Semester (Semester_ID, Semester_Name, Year, Start_Date, End_Date) VA
 ('SPR26', 'Spring 2026', 2026, '2026-01-12', '2026-05-08'),
 ('FALL26', 'Fall 2026', 2026, '2026-08-22', '2026-12-18'),
 ('SPR27', 'Spring 2027', 2027, '2027-01-11', '2027-05-07');
-
 
 -- Insert data into Faculty table
 INSERT INTO Faculty (Faculty_ID, Name, Email, Department_ID) VALUES
@@ -138,7 +141,6 @@ INSERT INTO Course (Course_ID, Course_Name, Credits, Department_ID, Faculty_ID) 
 ('BT150', 'Cell Biology', 4, 'BT', 'FBT01');
 
 -- Insert data into Registration table
--- Note: Grades are NULL as students have just registered. Reg_ID is auto-incremented.
 INSERT INTO Registration (Student_ID, Course_ID, Reg_Date) VALUES
 ('STU001', 'CS101', '2025-08-15'),
 ('STU001', 'CS351A', '2025-08-15'),
@@ -149,7 +151,6 @@ INSERT INTO Registration (Student_ID, Course_ID, Reg_Date) VALUES
 ('STU006', 'BT150', '2025-08-18');
 
 -- Insert data into Schedule table
--- Schedule_ID is auto-incremented.
 INSERT INTO Schedule (Course_ID, Semester_ID, Classroom_ID, Day, Time_Slot) VALUES
 ('CS101', 'FALL25', 'C5201', 'Monday', '09:00-10:00'),
 ('CS101', 'FALL25', 'C5201', 'Wednesday', '09:00-10:00'),
@@ -158,3 +159,76 @@ INSERT INTO Schedule (Course_ID, Semester_ID, Classroom_ID, Day, Time_Slot) VALU
 ('CS351A', 'FALL25', 'C5201', 'Tuesday', '10:00-11:00'),
 ('CV210', 'FALL25', 'C4301', 'Friday', '09:00-10:00'),
 ('BT150', 'FALL25', 'C1404', 'Monday', '13:00-14:00');
+
+--
+-- Advanced Database Objects
+--
+
+-- Change the delimiter for multi-line objects
+DELIMITER $$
+
+-- 1. Stored Procedure: Get a student's registered courses
+CREATE PROCEDURE sp_GetStudentRegistrations(IN p_Student_ID VARCHAR(15))
+BEGIN
+    SELECT 
+        S.Name AS Student_Name,
+        C.Course_ID,
+        C.Course_Name,
+        R.Reg_Date,
+        R.Grade,
+        R.Reg_ID
+    FROM Registration R
+    JOIN Course C ON R.Course_ID = C.Course_ID
+    JOIN Student S ON R.Student_ID = S.Student_ID
+    WHERE R.Student_ID = p_Student_ID;
+END$$
+
+-- 2. Stored Function: Get current enrollment count for a course
+CREATE FUNCTION fn_GetCourseEnrollmentCount(p_Course_ID VARCHAR(10))
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_count INT;
+    
+    SELECT COUNT(*) INTO v_count
+    FROM Registration
+    WHERE Course_ID = p_Course_ID;
+    
+    RETURN v_count;
+END$$
+
+-- 3. Trigger: Check classroom capacity BEFORE inserting a new registration
+CREATE TRIGGER trg_CheckCapacity
+BEFORE INSERT ON Registration
+FOR EACH ROW
+BEGIN
+    DECLARE v_capacity INT;
+    DECLARE v_current_enrollment INT;
+    DECLARE v_classroom_id VARCHAR(10);
+
+    -- 1. Find the classroom for this course
+    SELECT Classroom_ID INTO v_classroom_id
+    FROM Schedule
+    WHERE Course_ID = NEW.Course_ID
+    LIMIT 1;
+    
+    -- 2. If a classroom is assigned, get its capacity
+    IF v_classroom_id IS NOT NULL THEN
+        SELECT Capacity INTO v_capacity
+        FROM Classroom
+        WHERE Classroom_ID = v_classroom_id;
+        
+        -- 3. Get the current number of students registered
+        SET v_current_enrollment = fn_GetCourseEnrollmentCount(NEW.Course_ID);
+        
+        -- 4. Check if the class is full
+        IF v_current_enrollment >= v_capacity THEN
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Error: Cannot register. The class is full.';
+        END IF;
+    END IF;
+END$$
+
+-- Reset delimiter back to normal
+DELIMITER ;

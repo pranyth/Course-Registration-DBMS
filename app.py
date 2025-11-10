@@ -9,7 +9,7 @@ app.secret_key = 'your_super_secret_key'
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'rgsp1512',  # <--- CHANGE THIS
+    'password': 'Negi22124#',  # <--- CHANGE THIS
     'database': 'miniproject'
 }
 
