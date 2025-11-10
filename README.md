@@ -30,6 +30,12 @@ This application is built with a Python Flask backend, a MySQL database, and an 
     * **JOINs:** Used to display faculty names and department info on the student dashboard.
     * **Aggregate Query:** The admin dashboard shows an aggregate `COUNT` of students per department.
     * **Nested Query:** The admin dashboard shows all courses from the 'Computer Science' department using a subquery.
+* **Student View:**
+     * View all classmates registered in the same course.
+     * Displays student names and departments for each course.
+* **Admin View:**
+      * Search for students by grade and course.
+      * Admin enters a grade and selects a course → displays all students who received that grade.
 
 ---
 
@@ -76,9 +82,15 @@ This application is built with a Python Flask backend, a MySQL database, and an 
 * Login Page
   <img width="1915" height="644" alt="image" src="https://github.com/user-attachments/assets/21ff389d-35c8-460c-b31c-b2b0190b6ada" />
 * Student Dashboard
-  <img width="1913" height="1009" alt="image" src="https://github.com/user-attachments/assets/c124d1a5-f636-4135-8f61-344e600464e8" />
+  <img width="1818" height="940" alt="image" src="https://github.com/user-attachments/assets/e4c2891c-84c2-4ebb-9a6b-353f264ed375" />
+
+  <img width="1839" height="428" alt="image" src="https://github.com/user-attachments/assets/907122f5-0cd2-425b-954b-ab330834f43b" />
+
 * Admin Dashboard
-<img width="1850" height="979" alt="image" src="https://github.com/user-attachments/assets/2fac541f-9067-4f53-aff6-35caa165550e" />
+<img width="1686" height="1030" alt="image" src="https://github.com/user-attachments/assets/acf1c4f8-71b4-42f2-b869-0fdf1b4db9fe" />
+
+<img width="1909" height="737" alt="image" src="https://github.com/user-attachments/assets/cdc78a1e-9eae-418c-bd65-8dd143624dff" />
+
 
 ---
 
